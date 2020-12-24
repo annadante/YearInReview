@@ -56,7 +56,10 @@ namespace YearInReview
 
             while(hasNextPage)
             {
-                await Task.Delay(180000);
+                //So the API will not block me 
+                Random rnd = new Random();
+                var delayCount = rnd.Next(0, 9);
+                await Task.Delay(delayCount*10000);
                 var posts = await GetPosts(10, cursor, graphQLClient);
 
                 hasNextPage = posts.posts.pageInfo.hasNextPage;
