@@ -48,7 +48,7 @@ namespace YearInReview
             var hasNextPage = initialPosts.posts.pageInfo.hasNextPage;
 
             //Create first 10 records
-            using (var writer = new StreamWriter(appSettings.PathToBase))
+            using (var writer = new StreamWriter(Directory.GetCurrentDirectory() + "\\producthunt.csv"))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(initialPosts.posts.edges);
@@ -59,6 +59,7 @@ namespace YearInReview
                 //So the API will not block me 
                 Random rnd = new Random();
                 var delayCount = rnd.Next(0, 9);
+                Console.WriteLine("Delay count is:  " + delayCount);
                 await Task.Delay(delayCount*10000);
                 var posts = await GetPosts(10, cursor, graphQLClient);
 
@@ -112,7 +113,8 @@ query GetPosts($cursor: String, $count: Int)
 
         static void AppendToCSV(List<Edges> records)
         {
-            using var stream = File.Open(appSettings.PathToBase, FileMode.Append);
+            var path = Directory.GetCurrentDirectory() + "\\producthunt.csv";
+            using var stream = File.Open(path, FileMode.Append);
             using var writer = new StreamWriter(stream);
             using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
             // Don't write the header again.
